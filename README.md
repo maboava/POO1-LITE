@@ -17,23 +17,21 @@ Funcionalidades principais:
 
 ## 🗂 Estrutura do Projeto
 
+
 src/
 └── trabalhofinal/
-├── model/
-│ ├── Livro.java
-│ └── Estudante.java
-│
-├── service/
-│ └── BibliotecaService.java
-│
-├── io/
-│ └── LivroFileRepository.java
-│
-└── view/
-└── Main.java // Menu de interação
-
-markdown
-Copiar código
+    ├── model/
+    │   ├── Livro.java
+    │   └── Estudante.java
+    │
+    ├── service/
+    │   └── BibliotecaService.java
+    │
+    ├── io/
+    │   └── LivroFileRepository.java
+    │
+    └── view/
+        └── Main.java   // Menu de interação
 
 ---
 
@@ -74,6 +72,7 @@ Copiar código
 ---
 
 ## 📜 Menu Principal
+
 ====== Biblioteca ======
 1 - Cadastrar Livro
 2 - Listar Livros
@@ -82,8 +81,8 @@ Copiar código
 5 - Devolver Livro
 6 - Salvar Arquivo de Livros
 0 - Sair
-markdown
-Copiar código
+========================
+
 
 ---
 
@@ -124,10 +123,9 @@ Copiar código
 - **Arquivo `livros.txt`** gerado no diretório do projeto contendo os dados dos livros.  
 
 Exemplo de linha:
+
 101|Estruturas de Dados|N. Wirth|2010|Campus|false
 
-yaml
-Copiar código
 
 ---
 
