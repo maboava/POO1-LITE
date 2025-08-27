@@ -7,22 +7,45 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Classe responsável por gerenciar livros e estudantes da biblioteca.
+ */
 public class Biblioteca {
+    // Limites máximos de cadastros
     private static final int MAX_LIVROS = 100;
     private static final int MAX_ESTUDANTES = 50;
+
+    // Vetores que armazenam livros e estudantes
     private Livro[] livros = new Livro[MAX_LIVROS];
     private Estudante[] estudantes = new Estudante[MAX_ESTUDANTES];
+
+    // Quantidades atuais de livros e estudantes
     private int qtdLivros = 0;
     private int qtdEstudantes = 0;
 
+    // Arquivos utilizados para persistência dos dados
     private File arquivoLivros = new File("livros.txt");
     private File arquivoEstudantes = new File("estudantes.txt");
 
+    /**
+     * Carrega os dados salvos e, se estiver vazio, adiciona registros padrão.
+     */
     public void carregarDados() {
         carregarLivros();
         carregarEstudantes();
+
+        // Caso não existam dados, adiciona exemplos para facilitar testes
+        if (qtdLivros == 0) {
+            adicionarLivro(new Livro("L001", "Dom Casmurro", "Machado de Assis", 1899, "Garnier"));
+            adicionarLivro(new Livro("L002", "Memórias Póstumas", "Machado de Assis", 1881, "Revista Brasileira"));
+        }
+        if (qtdEstudantes == 0) {
+            adicionarEstudante(new Estudante("Computação", 3, "Ana Silva", "RA001"));
+            adicionarEstudante(new Estudante("Engenharia", 2, "Carlos Souza", "RA002"));
+        }
     }
 
+    // Lê os livros do arquivo de persistência
     private void carregarLivros() {
         if (!arquivoLivros.exists()) {
             return;
@@ -40,6 +63,7 @@ public class Biblioteca {
         }
     }
 
+    // Lê os estudantes do arquivo de persistência
     private void carregarEstudantes() {
         if (!arquivoEstudantes.exists()) {
             return;
@@ -57,11 +81,15 @@ public class Biblioteca {
         }
     }
 
+    /**
+     * Salva os dados atuais de livros e estudantes nos arquivos.
+     */
     public void salvarDados() {
         salvarLivros();
         salvarEstudantes();
     }
 
+    // Persiste os livros em arquivo
     private void salvarLivros() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(arquivoLivros))) {
             for (int i = 0; i < qtdLivros; i++) {
@@ -73,6 +101,7 @@ public class Biblioteca {
         }
     }
 
+    // Persiste os estudantes em arquivo
     private void salvarEstudantes() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(arquivoEstudantes))) {
             for (int i = 0; i < qtdEstudantes; i++) {
@@ -84,6 +113,9 @@ public class Biblioteca {
         }
     }
 
+    /**
+     * Adiciona um livro ao acervo.
+     */
     public boolean adicionarLivro(Livro livro) {
         if (qtdLivros >= MAX_LIVROS) {
             return false;
@@ -92,6 +124,9 @@ public class Biblioteca {
         return true;
     }
 
+    /**
+     * Retorna representação textual dos livros cadastrados.
+     */
     public String listarLivros() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < qtdLivros; i++) {
@@ -100,6 +135,9 @@ public class Biblioteca {
         return sb.toString();
     }
 
+    /**
+     * Adiciona um estudante ao cadastro.
+     */
     public boolean adicionarEstudante(Estudante estudante) {
         if (qtdEstudantes >= MAX_ESTUDANTES) {
             return false;
@@ -108,6 +146,9 @@ public class Biblioteca {
         return true;
     }
 
+    /**
+     * Retorna representação textual dos estudantes cadastrados.
+     */
     public String listarEstudantes() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < qtdEstudantes; i++) {
@@ -116,6 +157,7 @@ public class Biblioteca {
         return sb.toString();
     }
 
+    // Procura um livro pelo código
     private Livro buscarLivro(String codigo) {
         for (int i = 0; i < qtdLivros; i++) {
             if (livros[i].getCodigo().equals(codigo)) {
@@ -125,6 +167,7 @@ public class Biblioteca {
         return null;
     }
 
+    // Procura um estudante pelo RA
     private Estudante buscarEstudante(String ra) {
         for (int i = 0; i < qtdEstudantes; i++) {
             if (estudantes[i].getRa().equals(ra)) {
@@ -134,6 +177,9 @@ public class Biblioteca {
         return null;
     }
 
+    /**
+     * Empresta um livro para um estudante, se possível.
+     */
     public String emprestarLivro(String codigo, String ra) {
         Livro livro = buscarLivro(codigo);
         if (livro == null) {
@@ -153,6 +199,9 @@ public class Biblioteca {
         return "Empréstimo realizado";
     }
 
+    /**
+     * Devolve um livro ao acervo.
+     */
     public String devolverLivro(String codigo) {
         Livro livro = buscarLivro(codigo);
         if (livro == null) {
