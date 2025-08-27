@@ -1,10 +1,16 @@
 package br.com.trabalhofinal;
 
+/**
+ * Representa um estudante que pode realizar empréstimos na biblioteca.
+ */
 public class Estudante {
+    // Dados pessoais do estudante
     private String curso;
     private int periodo;
     private String nome;
     private String ra;
+
+    // Armazena os códigos dos livros emprestados (até 3)
     private String[] livrosEmprestados = new String[3];
 
     public Estudante(String curso, int periodo, String nome, String ra) {
@@ -14,22 +20,15 @@ public class Estudante {
         this.ra = ra;
     }
 
-    public String getCurso() {
-        return curso;
-    }
+    // Métodos de acesso
+    public String getCurso() { return curso; }
+    public int getPeriodo() { return periodo; }
+    public String getNome() { return nome; }
+    public String getRa() { return ra; }
 
-    public int getPeriodo() {
-        return periodo;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public String getRa() {
-        return ra;
-    }
-
+    /**
+     * Registra o empréstimo de um livro caso haja vaga.
+     */
     public boolean emprestarLivro(String codigoLivro) {
         for (int i = 0; i < livrosEmprestados.length; i++) {
             if (livrosEmprestados[i] == null) {
@@ -40,6 +39,9 @@ public class Estudante {
         return false;
     }
 
+    /**
+     * Remove o livro da lista de empréstimos.
+     */
     public boolean devolverLivro(String codigoLivro) {
         for (int i = 0; i < livrosEmprestados.length; i++) {
             if (codigoLivro.equals(livrosEmprestados[i])) {
@@ -50,6 +52,9 @@ public class Estudante {
         return false;
     }
 
+    /**
+     * Informa quantos livros o estudante possui atualmente.
+     */
     public int getQuantidadeLivros() {
         int count = 0;
         for (String codigo : livrosEmprestados) {
@@ -60,6 +65,7 @@ public class Estudante {
         return count;
     }
 
+    // Representação utilizada para salvar em arquivo
     public String toFileString() {
         StringBuilder sb = new StringBuilder();
         sb.append(curso).append(";").append(periodo).append(";")
@@ -73,6 +79,7 @@ public class Estudante {
         return sb.toString();
     }
 
+    // Constrói um estudante a partir de uma linha do arquivo
     public static Estudante fromFileString(String line) {
         String[] parts = line.split(";");
         if (parts.length < 4) {

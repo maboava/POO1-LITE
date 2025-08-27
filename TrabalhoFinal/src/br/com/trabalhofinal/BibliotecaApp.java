@@ -1,52 +1,78 @@
 package br.com.trabalhofinal;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
+import java.awt.*;
 
+/**
+ * Aplicação principal da biblioteca.
+ * Responsável por exibir o menu e interagir com o usuário.
+ */
 public class BibliotecaApp {
+
     public static void main(String[] args) {
         Biblioteca biblioteca = new Biblioteca();
         biblioteca.carregarDados();
-        String opcao;
+
+        // Opções exibidas como botões para facilitar o uso
+        String[] opcoes = {
+            "Adicionar Livro", "Listar Livros", "Adicionar Estudante",
+            "Listar Estudantes", "Emprestar Livro", "Devolver Livro", "Sair"
+        };
+        int escolha;
         do {
-            opcao = JOptionPane.showInputDialog(null,
-                "1 - Adicionar Livro\n" +
-                "2 - Listar Livros\n" +
-                "3 - Adicionar Estudante\n" +
-                "4 - Listar Estudantes\n" +
-                "5 - Emprestar Livro\n" +
-                "6 - Devolver Livro\n" +
-                "0 - Sair", "Biblioteca", JOptionPane.QUESTION_MESSAGE);
-            if (opcao == null) {
-                break;
-            }
-            switch (opcao) {
-                case "1":
+            escolha = JOptionPane.showOptionDialog(
+                    null,
+                    "Selecione uma opção",
+                    "Biblioteca",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE,
+                    null,
+                    opcoes,
+                    opcoes[0]
+            );
+
+            switch (escolha) {
+                case 0:
                     adicionarLivro(biblioteca);
                     break;
-                case "2":
-                    JOptionPane.showMessageDialog(null, biblioteca.listarLivros());
+                case 1:
+                    exibirMensagem("Lista de Livros", biblioteca.listarLivros());
                     break;
-                case "3":
+                case 2:
                     adicionarEstudante(biblioteca);
                     break;
-                case "4":
-                    JOptionPane.showMessageDialog(null, biblioteca.listarEstudantes());
+                case 3:
+                    exibirMensagem("Lista de Estudantes", biblioteca.listarEstudantes());
                     break;
-                case "5":
+                case 4:
                     emprestarLivro(biblioteca);
                     break;
-                case "6":
+                case 5:
                     devolverLivro(biblioteca);
                     break;
-                case "0":
-                    break;
                 default:
-                    JOptionPane.showMessageDialog(null, "Opção inválida");
+                    // opção 6 ou janela fechada encerram o programa
+                    break;
             }
-        } while (!"0".equals(opcao));
+        } while (escolha != 6 && escolha != JOptionPane.CLOSED_OPTION);
+
         biblioteca.salvarDados();
     }
 
+    /**
+     * Exibe uma mensagem em uma caixa com rolagem para melhor visualização.
+     */
+    private static void exibirMensagem(String titulo, String texto) {
+        JTextArea area = new JTextArea(texto);
+        area.setEditable(false);
+        JScrollPane scroll = new JScrollPane(area);
+        scroll.setPreferredSize(new Dimension(400, 300));
+        JOptionPane.showMessageDialog(null, scroll, titulo, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Solicita os dados de um livro e o adiciona à biblioteca.
+     */
     private static void adicionarLivro(Biblioteca biblioteca) {
         String codigo = JOptionPane.showInputDialog("Código do livro:");
         String titulo = JOptionPane.showInputDialog("Título:");
@@ -62,6 +88,9 @@ public class BibliotecaApp {
         }
     }
 
+    /**
+     * Solicita os dados de um estudante e o adiciona à biblioteca.
+     */
     private static void adicionarEstudante(Biblioteca biblioteca) {
         String curso = JOptionPane.showInputDialog("Curso:");
         String periodoStr = JOptionPane.showInputDialog("Período:");
@@ -76,6 +105,9 @@ public class BibliotecaApp {
         }
     }
 
+    /**
+     * Solicita as informações necessárias para emprestar um livro.
+     */
     private static void emprestarLivro(Biblioteca biblioteca) {
         String codigo = JOptionPane.showInputDialog("Código do livro:");
         String ra = JOptionPane.showInputDialog("RA do estudante:");
@@ -83,6 +115,9 @@ public class BibliotecaApp {
         JOptionPane.showMessageDialog(null, resultado);
     }
 
+    /**
+     * Solicita as informações necessárias para devolver um livro.
+     */
     private static void devolverLivro(Biblioteca biblioteca) {
         String codigo = JOptionPane.showInputDialog("Código do livro a devolver:");
         String resultado = biblioteca.devolverLivro(codigo);
