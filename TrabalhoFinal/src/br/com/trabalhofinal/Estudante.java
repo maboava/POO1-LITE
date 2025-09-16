@@ -4,6 +4,9 @@ package br.com.trabalhofinal;
  * Representa um estudante que pode realizar empréstimos na biblioteca.
  */
 public class Estudante {
+    // Limite padrão de empréstimos por aluno
+    private static final int LIMITE_EMPRESTIMOS = 3;
+
     // Dados pessoais do estudante
     private String curso;
     private int periodo;
@@ -11,7 +14,7 @@ public class Estudante {
     private String ra;
 
     // Armazena os códigos dos livros emprestados (até 3)
-    private String[] livrosEmprestados = new String[3];
+    private String[] livrosEmprestados = new String[LIMITE_EMPRESTIMOS];
 
     public Estudante(String curso, int periodo, String nome, String ra) {
         this.curso = curso;
@@ -25,6 +28,11 @@ public class Estudante {
     public int getPeriodo() { return periodo; }
     public String getNome() { return nome; }
     public String getRa() { return ra; }
+
+    // Ajusta dados pessoais
+    public void setCurso(String curso) { this.curso = curso; }
+    public void setPeriodo(int periodo) { this.periodo = periodo; }
+    public void setNome(String nome) { this.nome = nome; }
 
     /**
      * Registra o empréstimo de um livro caso haja vaga.
@@ -78,6 +86,29 @@ public class Estudante {
             }
         }
         return count;
+    }
+
+    /**
+     * Retorna o limite máximo de empréstimos permitido para o estudante.
+     */
+    public int getLimiteEmprestimos() {
+        return LIMITE_EMPRESTIMOS;
+    }
+
+    /**
+     * Disponibiliza os códigos dos livros emprestados para a interface.
+     */
+    public String[] getLivrosEmprestados() {
+        String[] copia = new String[livrosEmprestados.length];
+        System.arraycopy(livrosEmprestados, 0, copia, 0, livrosEmprestados.length);
+        return copia;
+    }
+
+    /**
+     * Limite global disponível para reaproveitamento em outras classes.
+     */
+    public static int getLimiteEmprestimosPorEstudante() {
+        return LIMITE_EMPRESTIMOS;
     }
 
     // Representação utilizada para salvar em arquivo

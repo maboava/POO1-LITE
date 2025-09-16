@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Classe responsável por gerenciar livros e estudantes da biblioteca.
@@ -142,6 +144,15 @@ public class Biblioteca {
     }
 
     /**
+     * Disponibiliza os livros em formato de vetor para a interface.
+     */
+    public Livro[] getLivros() {
+        Livro[] resultado = new Livro[qtdLivros];
+        System.arraycopy(livros, 0, resultado, 0, qtdLivros);
+        return resultado;
+    }
+
+    /**
      * Retorna apenas os livros que estão disponíveis para empréstimo.
      */
     public String listarLivrosDisponiveis() {
@@ -154,6 +165,66 @@ public class Biblioteca {
             }
         }
         return possuiDisponiveis ? sb.toString().trim() : "Nenhum livro disponível.";
+    }
+
+    /**
+     * Retorna somente os livros livres para novos empréstimos.
+     */
+    public Livro[] obterLivrosDisponiveis() {
+        List<Livro> disponiveis = new ArrayList<>();
+        for (int i = 0; i < qtdLivros; i++) {
+            if (!livros[i].isEmprestado()) {
+                disponiveis.add(livros[i]);
+            }
+        }
+        return disponiveis.toArray(new Livro[0]);
+    }
+
+    /**
+     * Retorna os livros que estão emprestados atualmente.
+     */
+    public Livro[] obterLivrosEmprestados() {
+        List<Livro> emprestados = new ArrayList<>();
+        for (int i = 0; i < qtdLivros; i++) {
+            if (livros[i].isEmprestado()) {
+                emprestados.add(livros[i]);
+            }
+        }
+        return emprestados.toArray(new Livro[0]);
+    }
+
+    /**
+     * Atualiza os dados de um livro já cadastrado.
+     */
+    public boolean atualizarLivro(String codigo, String titulo, String autor, int ano, String editora) {
+        Livro livro = buscarLivro(codigo);
+        if (livro == null) {
+            return false;
+        }
+        livro.setTitulo(titulo);
+        livro.setAutor(autor);
+        livro.setAno(ano);
+        livro.setEditora(editora);
+        return true;
+    }
+
+    /**
+     * Remove um livro do acervo se ele não estiver emprestado.
+     */
+    public boolean removerLivro(String codigo) {
+        for (int i = 0; i < qtdLivros; i++) {
+            if (livros[i].getCodigo().equals(codigo)) {
+                if (livros[i].isEmprestado()) {
+                    return false;
+                }
+                for (int j = i; j < qtdLivros - 1; j++) {
+                    livros[j] = livros[j + 1];
+                }
+                livros[--qtdLivros] = null;
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -171,6 +242,39 @@ public class Biblioteca {
     }
 
     /**
+     * Atualiza os dados principais de um estudante.
+     */
+    public boolean atualizarEstudante(String ra, String curso, int periodo, String nome) {
+        Estudante estudante = buscarEstudante(ra);
+        if (estudante == null) {
+            return false;
+        }
+        estudante.setCurso(curso);
+        estudante.setPeriodo(periodo);
+        estudante.setNome(nome);
+        return true;
+    }
+
+    /**
+     * Exclui um estudante caso não possua livros emprestados.
+     */
+    public boolean removerEstudante(String ra) {
+        for (int i = 0; i < qtdEstudantes; i++) {
+            if (estudantes[i].getRa().equals(ra)) {
+                if (estudantes[i].getQuantidadeLivros() > 0) {
+                    return false;
+                }
+                for (int j = i; j < qtdEstudantes - 1; j++) {
+                    estudantes[j] = estudantes[j + 1];
+                }
+                estudantes[--qtdEstudantes] = null;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Retorna representação textual dos estudantes cadastrados.
      */
     public String listarEstudantes() {
@@ -184,6 +288,15 @@ public class Biblioteca {
         return sb.toString().trim();
     }
 
+    /**
+     * Entrega os estudantes cadastrados em formato de vetor.
+     */
+    public Estudante[] getEstudantes() {
+        Estudante[] resultado = new Estudante[qtdEstudantes];
+        System.arraycopy(estudantes, 0, resultado, 0, qtdEstudantes);
+        return resultado;
+    }
+
     // Procura um livro pelo código
     private Livro buscarLivro(String codigo) {
         for (int i = 0; i < qtdLivros; i++) {
@@ -194,6 +307,13 @@ public class Biblioteca {
         return null;
     }
 
+    /**
+     * Torna o método de busca de livro acessível para a interface.
+     */
+    public Livro obterLivro(String codigo) {
+        return buscarLivro(codigo);
+    }
+
     // Procura um estudante pelo RA
     private Estudante buscarEstudante(String ra) {
         for (int i = 0; i < qtdEstudantes; i++) {
@@ -202,6 +322,26 @@ public class Biblioteca {
             }
         }
         return null;
+    }
+
+    /**
+     * Torna a busca de estudantes disponível para outras classes.
+     */
+    public Estudante obterEstudante(String ra) {
+        return buscarEstudante(ra);
+    }
+
+    /**
+     * Recupera os livros emprestados para um determinado RA.
+     */
+    public Livro[] obterLivrosEmprestadosPorEstudante(String ra) {
+        List<Livro> resultado = new ArrayList<>();
+        for (int i = 0; i < qtdLivros; i++) {
+            if (livros[i].isEmprestado() && livros[i].getRaEstudante().equals(ra)) {
+                resultado.add(livros[i]);
+            }
+        }
+        return resultado.toArray(new Livro[0]);
     }
 
     /**

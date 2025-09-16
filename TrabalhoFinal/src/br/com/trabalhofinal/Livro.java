@@ -34,6 +34,12 @@ public class Livro {
     public boolean isEmprestado() { return emprestado; }
     public String getRaEstudante() { return raEstudante; }
 
+    // Permite ajustes quando o cadastro é editado
+    public void setTitulo(String titulo) { this.titulo = titulo; }
+    public void setAutor(String autor) { this.autor = autor; }
+    public void setAno(int ano) { this.ano = ano; }
+    public void setEditora(String editora) { this.editora = editora; }
+
     /**
      * Marca o livro como emprestado para o RA informado.
      */
