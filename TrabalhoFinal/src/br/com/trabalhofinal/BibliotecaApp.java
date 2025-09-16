@@ -1,126 +1,136 @@
 package br.com.trabalhofinal;
 
-import javax.swing.*;
-import java.awt.*;
+import java.util.Scanner;
 
 /**
- * Aplicação principal da biblioteca.
- * Responsável por exibir o menu e interagir com o usuário.
+ * Ponto de entrada da aplicação em modo console.
+ * A classe exibe um menu simples para que o usuário execute
+ * as operações de cadastro, listagem, empréstimo e devolução
+ * de livros utilizando apenas classes, arrays e arquivos texto.
  */
 public class BibliotecaApp {
+
+    private static final Scanner SCANNER = new Scanner(System.in);
 
     public static void main(String[] args) {
         Biblioteca biblioteca = new Biblioteca();
         biblioteca.carregarDados();
 
-        // Opções exibidas como botões para facilitar o uso
-        String[] opcoes = {
-            "Adicionar Livro", "Listar Livros", "Adicionar Estudante",
-            "Listar Estudantes", "Emprestar Livro", "Devolver Livro", "Sair"
-        };
-        int escolha;
+        int opcao;
         do {
-            escolha = JOptionPane.showOptionDialog(
-                    null,
-                    "Selecione uma opção",
-                    "Biblioteca",
-                    JOptionPane.DEFAULT_OPTION,
-                    JOptionPane.INFORMATION_MESSAGE,
-                    null,
-                    opcoes,
-                    opcoes[0]
-            );
+            exibirMenu();
+            opcao = lerInteiro("Escolha uma opção: ");
 
-            switch (escolha) {
-                case 0:
+            switch (opcao) {
+                case 1:
                     adicionarLivro(biblioteca);
                     break;
-                case 1:
-                    exibirMensagem("Lista de Livros", biblioteca.listarLivros());
-                    break;
                 case 2:
-                    adicionarEstudante(biblioteca);
+                    System.out.println("\n--- Lista de Livros ---");
+                    System.out.println(biblioteca.listarLivros());
                     break;
                 case 3:
-                    exibirMensagem("Lista de Estudantes", biblioteca.listarEstudantes());
+                    System.out.println("\n--- Livros Disponíveis ---");
+                    System.out.println(biblioteca.listarLivrosDisponiveis());
                     break;
                 case 4:
-                    emprestarLivro(biblioteca);
+                    adicionarEstudante(biblioteca);
                     break;
                 case 5:
+                    System.out.println("\n--- Lista de Estudantes ---");
+                    System.out.println(biblioteca.listarEstudantes());
+                    break;
+                case 6:
+                    emprestarLivro(biblioteca);
+                    break;
+                case 7:
                     devolverLivro(biblioteca);
                     break;
+                case 0:
+                    System.out.println("Encerrando o sistema...");
+                    break;
                 default:
-                    // opção 6 ou janela fechada encerram o programa
+                    System.out.println("Opção inválida. Tente novamente.");
                     break;
             }
-        } while (escolha != 6 && escolha != JOptionPane.CLOSED_OPTION);
+        } while (opcao != 0);
 
         biblioteca.salvarDados();
+        System.out.println("Dados salvos com sucesso. Até logo!");
+        SCANNER.close();
     }
 
-    /**
-     * Exibe uma mensagem em uma caixa com rolagem para melhor visualização.
-     */
-    private static void exibirMensagem(String titulo, String texto) {
-        JTextArea area = new JTextArea(texto);
-        area.setEditable(false);
-        JScrollPane scroll = new JScrollPane(area);
-        scroll.setPreferredSize(new Dimension(400, 300));
-        JOptionPane.showMessageDialog(null, scroll, titulo, JOptionPane.INFORMATION_MESSAGE);
+    private static void exibirMenu() {
+        System.out.println("\n====== Biblioteca ======");
+        System.out.println("1 - Cadastrar Livro");
+        System.out.println("2 - Listar Todos os Livros");
+        System.out.println("3 - Listar Apenas Livros Disponíveis");
+        System.out.println("4 - Cadastrar Estudante");
+        System.out.println("5 - Listar Estudantes");
+        System.out.println("6 - Emprestar Livro");
+        System.out.println("7 - Devolver Livro");
+        System.out.println("0 - Sair");
+        System.out.println("========================");
     }
 
-    /**
-     * Solicita os dados de um livro e o adiciona à biblioteca.
-     */
     private static void adicionarLivro(Biblioteca biblioteca) {
-        String codigo = JOptionPane.showInputDialog("Código do livro:");
-        String titulo = JOptionPane.showInputDialog("Título:");
-        String autor = JOptionPane.showInputDialog("Autor:");
-        String anoStr = JOptionPane.showInputDialog("Ano de publicação:");
-        String editora = JOptionPane.showInputDialog("Editora:");
-        int ano = Integer.parseInt(anoStr);
+        System.out.println("\n--- Cadastro de Livro ---");
+        String codigo = lerTexto("Código do livro: ");
+        String titulo = lerTexto("Título: ");
+        String autor = lerTexto("Autor: ");
+        int ano = lerInteiro("Ano de publicação: ");
+        String editora = lerTexto("Editora: ");
+
         Livro livro = new Livro(codigo, titulo, autor, ano, editora);
         if (biblioteca.adicionarLivro(livro)) {
-            JOptionPane.showMessageDialog(null, "Livro adicionado");
+            System.out.println("Livro cadastrado com sucesso!");
         } else {
-            JOptionPane.showMessageDialog(null, "Limite de livros atingido");
+            System.out.println("Não foi possível cadastrar o livro. Verifique se já existe outro com o mesmo código ou se o limite foi atingido.");
         }
     }
 
-    /**
-     * Solicita os dados de um estudante e o adiciona à biblioteca.
-     */
     private static void adicionarEstudante(Biblioteca biblioteca) {
-        String curso = JOptionPane.showInputDialog("Curso:");
-        String periodoStr = JOptionPane.showInputDialog("Período:");
-        String nome = JOptionPane.showInputDialog("Nome:");
-        String ra = JOptionPane.showInputDialog("RA:");
-        int periodo = Integer.parseInt(periodoStr);
+        System.out.println("\n--- Cadastro de Estudante ---");
+        String curso = lerTexto("Curso: ");
+        int periodo = lerInteiro("Período: ");
+        String nome = lerTexto("Nome: ");
+        String ra = lerTexto("Registro Acadêmico (RA): ");
+
         Estudante estudante = new Estudante(curso, periodo, nome, ra);
         if (biblioteca.adicionarEstudante(estudante)) {
-            JOptionPane.showMessageDialog(null, "Estudante adicionado");
+            System.out.println("Estudante cadastrado com sucesso!");
         } else {
-            JOptionPane.showMessageDialog(null, "Limite de estudantes atingido");
+            System.out.println("Não foi possível cadastrar o estudante. Verifique se o RA já foi utilizado ou se o limite foi atingido.");
         }
     }
 
-    /**
-     * Solicita as informações necessárias para emprestar um livro.
-     */
     private static void emprestarLivro(Biblioteca biblioteca) {
-        String codigo = JOptionPane.showInputDialog("Código do livro:");
-        String ra = JOptionPane.showInputDialog("RA do estudante:");
-        String resultado = biblioteca.emprestarLivro(codigo, ra);
-        JOptionPane.showMessageDialog(null, resultado);
+        System.out.println("\n--- Empréstimo de Livro ---");
+        String codigo = lerTexto("Código do livro: ");
+        String ra = lerTexto("RA do estudante: ");
+        System.out.println(biblioteca.emprestarLivro(codigo, ra));
     }
 
-    /**
-     * Solicita as informações necessárias para devolver um livro.
-     */
     private static void devolverLivro(Biblioteca biblioteca) {
-        String codigo = JOptionPane.showInputDialog("Código do livro a devolver:");
-        String resultado = biblioteca.devolverLivro(codigo);
-        JOptionPane.showMessageDialog(null, resultado);
+        System.out.println("\n--- Devolução de Livro ---");
+        String codigo = lerTexto("Código do livro: ");
+        System.out.println(biblioteca.devolverLivro(codigo));
+    }
+
+    private static int lerInteiro(String mensagem) {
+        while (true) {
+            System.out.print(mensagem);
+            String entrada = SCANNER.nextLine();
+            try {
+                return Integer.parseInt(entrada.trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Valor inválido. Digite um número inteiro.");
+            }
+        }
+    }
+
+    private static String lerTexto(String mensagem) {
+        System.out.print(mensagem);
+        return SCANNER.nextLine().trim();
     }
 }
