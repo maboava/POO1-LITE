@@ -120,6 +120,9 @@ public class Biblioteca {
         if (qtdLivros >= MAX_LIVROS) {
             return false;
         }
+        if (buscarLivro(livro.getCodigo()) != null) {
+            return false;
+        }
         livros[qtdLivros++] = livro;
         return true;
     }
@@ -128,11 +131,29 @@ public class Biblioteca {
      * Retorna representação textual dos livros cadastrados.
      */
     public String listarLivros() {
+        if (qtdLivros == 0) {
+            return "Nenhum livro cadastrado.";
+        }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < qtdLivros; i++) {
             sb.append(livros[i].toString()).append("\n");
         }
-        return sb.toString();
+        return sb.toString().trim();
+    }
+
+    /**
+     * Retorna apenas os livros que estão disponíveis para empréstimo.
+     */
+    public String listarLivrosDisponiveis() {
+        boolean possuiDisponiveis = false;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < qtdLivros; i++) {
+            if (!livros[i].isEmprestado()) {
+                sb.append(livros[i].toString()).append("\n");
+                possuiDisponiveis = true;
+            }
+        }
+        return possuiDisponiveis ? sb.toString().trim() : "Nenhum livro disponível.";
     }
 
     /**
@@ -140,6 +161,9 @@ public class Biblioteca {
      */
     public boolean adicionarEstudante(Estudante estudante) {
         if (qtdEstudantes >= MAX_ESTUDANTES) {
+            return false;
+        }
+        if (buscarEstudante(estudante.getRa()) != null) {
             return false;
         }
         estudantes[qtdEstudantes++] = estudante;
@@ -150,11 +174,14 @@ public class Biblioteca {
      * Retorna representação textual dos estudantes cadastrados.
      */
     public String listarEstudantes() {
+        if (qtdEstudantes == 0) {
+            return "Nenhum estudante cadastrado.";
+        }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < qtdEstudantes; i++) {
             sb.append(estudantes[i].toString()).append("\n");
         }
-        return sb.toString();
+        return sb.toString().trim();
     }
 
     // Procura um livro pelo código
@@ -191,6 +218,9 @@ public class Biblioteca {
         Estudante estudante = buscarEstudante(ra);
         if (estudante == null) {
             return "Estudante não encontrado";
+        }
+        if (estudante.possuiLivro(codigo)) {
+            return "Estudante já possui este livro";
         }
         if (!estudante.emprestarLivro(codigo)) {
             return "Estudante já possui 3 livros";

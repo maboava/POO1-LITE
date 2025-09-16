@@ -30,6 +30,9 @@ public class Estudante {
      * Registra o empréstimo de um livro caso haja vaga.
      */
     public boolean emprestarLivro(String codigoLivro) {
+        if (possuiLivro(codigoLivro)) {
+            return false;
+        }
         for (int i = 0; i < livrosEmprestados.length; i++) {
             if (livrosEmprestados[i] == null) {
                 livrosEmprestados[i] = codigoLivro;
@@ -46,6 +49,18 @@ public class Estudante {
         for (int i = 0; i < livrosEmprestados.length; i++) {
             if (codigoLivro.equals(livrosEmprestados[i])) {
                 livrosEmprestados[i] = null;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Verifica se o estudante possui o livro informado.
+     */
+    public boolean possuiLivro(String codigoLivro) {
+        for (String codigo : livrosEmprestados) {
+            if (codigoLivro.equals(codigo)) {
                 return true;
             }
         }
@@ -103,10 +118,15 @@ public class Estudante {
         sb.append(curso).append(";").append(periodo).append(";")
           .append(nome).append(";").append(ra).append(";");
         sb.append("Livros: ");
+        boolean possuiLivros = false;
         for (String codigo : livrosEmprestados) {
             if (codigo != null) {
                 sb.append(codigo).append(" ");
+                possuiLivros = true;
             }
+        }
+        if (!possuiLivros) {
+            sb.append("Nenhum");
         }
         return sb.toString().trim();
     }
