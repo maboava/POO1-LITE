@@ -237,6 +237,16 @@ public class BibliotecaUI extends JFrame {
         buscarEmprestimosField = new JTextField(20);
         topo.add(buscarEmprestimosField);
 
+        // Campo de dica para o usuário
+        JTextField dicaField = new JTextField("Pesquise um aluno ou RA antes de emprestar.");
+        dicaField.setEditable(false);
+        dicaField.setBorder(null);
+        dicaField.setForeground(Color.GRAY);
+        dicaField.setBackground(topo.getBackground());
+        dicaField.setFont(buscarEmprestimosField.getFont().deriveFont(Font.ITALIC));
+        topo.add(dicaField);
+        
+
         JButton btnPesquisar = new JButton("Pesquisar aluno");
         btnPesquisar.addActionListener(e -> pesquisarAlunoEmprestimo());
         topo.add(btnPesquisar);
@@ -732,15 +742,20 @@ public class BibliotecaUI extends JFrame {
         } else {
             int atual = alunoSelecionado.getQuantidadeLivros();
             int limite = alunoSelecionado.getLimiteEmprestimos();
-            resumoAlunoLabel.setText(
-                    String.format(
-                            "Aluno %s (RA %s) possui %d de %d livros emprestados.",
-                            alunoSelecionado.getNome(),
-                            alunoSelecionado.getRa(),
-                            atual,
-                            limite
-                    )
+            String texto = String.format(
+                    "Aluno %s (RA %s) possui %d de %d livros emprestados.",
+                    alunoSelecionado.getNome(),
+                    alunoSelecionado.getRa(),
+                    atual,
+                    limite
             );
+            if (atual == limite) {
+                texto += " <span style='color:red; font-weight:bold;'>&nbsp;LIMITE MÁXIMO ATINGIDO</span>";
+                resumoAlunoLabel.setText("<html>" + texto + "</html>");
+            } else {
+                resumoAlunoLabel.setText(texto);
+            }
+            resumoAlunoLabel.setForeground(Color.BLACK);
             emprestarAlunoButton.setEnabled(atual < limite);
         }
     }
