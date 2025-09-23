@@ -13,7 +13,8 @@ import java.util.List;
  * Classe responsável por gerenciar livros e estudantes da biblioteca.
  */
 public class Biblioteca {
-    // Limites máximos de cadastros
+    // Limites máximos de cadastros, definidos para simplificar a implementação, já
+    // que estamos usando txt
     private static final int MAX_LIVROS = 100;
     private static final int MAX_ESTUDANTES = 50;
 
@@ -50,18 +51,19 @@ public class Biblioteca {
     // Lê os livros do arquivo de persistência
     private void carregarLivros() {
         if (!arquivoLivros.exists()) {
-            return;
+            return; // Nada a carregar
         }
         try (BufferedReader br = new BufferedReader(new FileReader(arquivoLivros))) {
             String line;
-            while ((line = br.readLine()) != null && qtdLivros < MAX_LIVROS) {
-                Livro l = Livro.fromFileString(line);
+            while ((line = br.readLine()) != null && qtdLivros < MAX_LIVROS) { // Lê linha a linha, até o fim do arquivo
+                                                                               // ou atingir o limite
+                Livro l = Livro.fromFileString(line); // Converte a linha em um objeto Livro
                 if (l != null) {
                     livros[qtdLivros++] = l;
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // imprime no console o rastreamento da pilha, arquivo não encontrado, etc.
         }
     }
 
@@ -119,27 +121,37 @@ public class Biblioteca {
      * Adiciona um livro ao acervo.
      */
     public boolean adicionarLivro(Livro livro) {
+        // Se já atingiu o limite, não adiciona
         if (qtdLivros >= MAX_LIVROS) {
             return false;
         }
+        // Se já existe um livro com o mesmo código, não adiciona
         if (buscarLivro(livro.getCodigo()) != null) {
             return false;
         }
+        // Adiciona o livro no array e incrementa o contador
         livros[qtdLivros++] = livro;
-        return true;
+        return true; // Deu certo
     }
 
     /**
      * Retorna representação textual dos livros cadastrados.
      */
     public String listarLivros() {
+        // Se não tem livros, retorna a mensagem
         if (qtdLivros == 0) {
             return "Nenhum livro cadastrado.";
         }
+
+        // StringBuilder para montar o texto da lista
         StringBuilder sb = new StringBuilder();
+
+        // Percorre todos os livros e adiciona na String
         for (int i = 0; i < qtdLivros; i++) {
             sb.append(livros[i].toString()).append("\n");
         }
+
+        // Retorna a lista sem a quebra de linha no final
         return sb.toString().trim();
     }
 

@@ -1,7 +1,7 @@
 package br.com.trabalhofinal;
 
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
 /**
  * Ponto de entrada da aplicação. Responsável por exibir a splash screen
@@ -14,18 +14,18 @@ public class BibliotecaApp {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> { // manda o código rodar na fila certa do Swing, assim a tela não trava nem buga.”
             configurarInterface();
 
             SplashScreenWindow splash = new SplashScreenWindow();
             splash.setVisible(true);
 
-            Timer timer = new Timer(3000, event -> {
-                splash.dispose();
+            Timer timer = new Timer(3000, event -> { // Simula tempo de carga
+                splash.dispose(); // Fecha a splash screen
                 iniciarAplicacao();
             });
-            timer.setRepeats(false);
-            timer.start();
+            timer.setRepeats(false); // Executa apenas uma vez
+            timer.start(); // Inicia o timer
         });
     }
 
@@ -49,10 +49,10 @@ public class BibliotecaApp {
      */
     private static void iniciarAplicacao() {
         Biblioteca biblioteca = new Biblioteca();
-        biblioteca.carregarDados();
+        biblioteca.carregarDados(); // Carrega dados salvos no txt
 
         BibliotecaUI ui = new BibliotecaUI(biblioteca);
-        ui.setLocationRelativeTo(null);
+        ui.setLocationRelativeTo(null); // Centraliza a janela
         ui.setVisible(true);
     }
 
