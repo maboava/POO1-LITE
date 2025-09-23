@@ -1,13 +1,7 @@
 package br.com.trabalhofinal;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 /**
  * Classe responsável por gerenciar livros e estudantes da biblioteca.
