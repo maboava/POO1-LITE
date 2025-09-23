@@ -2,4 +2,4 @@ L001;Dom Casmurro;Machado de Assis;1899;Oii;RA001
 L002;Memórias Póstumas;Machado de Assis;1881;Revista Brasileira;
 01;Dom Casmurro;Machado de Assis;1899;Garnier;31017
 02;1984;George Orwell;1949;Secker & Warburg;31017
-8883;Engenharia para Leigos;Jorge Castanhari;2001;Ática;
+8883;Engenharia para Leigos;Jorge Castanhari;2001;Ática;31017

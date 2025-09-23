@@ -15,8 +15,8 @@ import java.util.List;
 public class Biblioteca {
     // Limites máximos de cadastros, definidos para simplificar a implementação, já
     // que estamos usando txt
-    private static final int MAX_LIVROS = 100;
-    private static final int MAX_ESTUDANTES = 50;
+    private static final int MAX_LIVROS = 30;
+    private static final int MAX_ESTUDANTES = 10;
 
     // Vetores que armazenam livros e estudantes
     private Livro[] livros = new Livro[MAX_LIVROS];
