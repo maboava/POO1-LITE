@@ -19,16 +19,20 @@ import java.util.StringJoiner;
  */
 public class BibliotecaUI extends JFrame {
 
+    /** Guarda toda a lógica de cadastro da biblioteca. */
     private final Biblioteca biblioteca;
 
+    // Componentes usados na aba de livros
     private DefaultTableModel livrosModel;
     private JTable livrosTable;
     private JTextField buscarLivrosField;
 
+    // Componentes usados na aba de estudantes
     private DefaultTableModel estudantesModel;
     private JTable estudantesTable;
     private JTextField buscarEstudantesField;
 
+    // Componentes usados na aba de empréstimos
     private DefaultTableModel emprestimosModel;
     private JTable emprestimosTable;
     private JTextField buscarEmprestimosField;
@@ -45,6 +49,7 @@ public class BibliotecaUI extends JFrame {
         adicionarEventosDeFechamento();
         setContentPane(criarConteudoPrincipal());
 
+        // Atualiza as tabelas logo após construir a tela
         atualizarTabelaLivros("");
         atualizarTabelaEstudantes("");
         atualizarTabelaEmprestimos(null);
@@ -58,6 +63,7 @@ public class BibliotecaUI extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                // Confirma se o usuário realmente deseja sair
                 int opcao = JOptionPane.showConfirmDialog(
                         BibliotecaUI.this,
                         "Deseja sair da biblioteca?",
@@ -66,6 +72,7 @@ public class BibliotecaUI extends JFrame {
                         JOptionPane.QUESTION_MESSAGE
                 );
                 if (opcao == JOptionPane.YES_OPTION) {
+                    // Salva as informações antes de fechar a janela
                     biblioteca.salvarDados();
                     JOptionPane.showMessageDialog(
                             BibliotecaUI.this,
@@ -84,6 +91,7 @@ public class BibliotecaUI extends JFrame {
      */
     private JComponent criarConteudoPrincipal() {
         JTabbedPane abas = new JTabbedPane();
+        // Cada aba possui um painel completo com filtros e tabelas
         abas.addTab("Livros", criarPainelLivros());
         abas.addTab("Estudantes", criarPainelEstudantes());
         abas.addTab("Empréstimos", criarPainelEmprestimos());
@@ -99,10 +107,12 @@ public class BibliotecaUI extends JFrame {
         buscarLivrosField = new JTextField(20);
         topo.add(buscarLivrosField);
 
+        // Botão principal de busca por qualquer texto
         JButton btnPesquisar = new JButton("Pesquisar");
         btnPesquisar.addActionListener(e -> atualizarTabelaLivros(buscarLivrosField.getText()));
         topo.add(btnPesquisar);
 
+        // Limpa o campo e mostra todos os livros novamente
         JButton btnLimpar = new JButton("Limpar");
         btnLimpar.addActionListener(e -> {
             buscarLivrosField.setText("");
@@ -110,12 +120,14 @@ public class BibliotecaUI extends JFrame {
         });
         topo.add(btnLimpar);
 
+        // Abre a tela de cadastro de um novo livro
         JButton btnNovo = new JButton("Novo livro");
         btnNovo.addActionListener(e -> abrirDialogLivro(null));
         topo.add(btnNovo);
 
         painel.add(topo, BorderLayout.NORTH);
 
+        // Modelo da tabela com colunas fixas e botões nas últimas posições
         livrosModel = new DefaultTableModel(new Object[]{
                 "Código", "Título", "Autor", "Ano", "Editora", "Status", "Editar", "Excluir"
         }, 0) {
@@ -133,6 +145,7 @@ public class BibliotecaUI extends JFrame {
         JScrollPane scroll = new JScrollPane(livrosTable);
         painel.add(scroll, BorderLayout.CENTER);
 
+        // Ação executada ao clicar no botão "Editar"
         Action editarLivroAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -142,6 +155,7 @@ public class BibliotecaUI extends JFrame {
             }
         };
 
+        // Ação executada ao clicar no botão "Excluir"
         Action removerLivroAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -168,10 +182,12 @@ public class BibliotecaUI extends JFrame {
         buscarEstudantesField = new JTextField(20);
         topo.add(buscarEstudantesField);
 
+        // Busca alunos por nome, RA ou curso
         JButton btnPesquisar = new JButton("Pesquisar");
         btnPesquisar.addActionListener(e -> atualizarTabelaEstudantes(buscarEstudantesField.getText()));
         topo.add(btnPesquisar);
 
+        // Reseta o filtro para mostrar todos os alunos
         JButton btnLimpar = new JButton("Limpar");
         btnLimpar.addActionListener(e -> {
             buscarEstudantesField.setText("");
@@ -179,6 +195,7 @@ public class BibliotecaUI extends JFrame {
         });
         topo.add(btnLimpar);
 
+        // Abre a tela de cadastro de estudantes
         JButton btnNovo = new JButton("Novo estudante");
         btnNovo.addActionListener(e -> abrirDialogEstudante(null));
         topo.add(btnNovo);
@@ -202,6 +219,7 @@ public class BibliotecaUI extends JFrame {
         JScrollPane scroll = new JScrollPane(estudantesTable);
         painel.add(scroll, BorderLayout.CENTER);
 
+        // Ação para preencher o formulário com os dados do aluno existente
         Action editarEstudanteAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -211,6 +229,7 @@ public class BibliotecaUI extends JFrame {
             }
         };
 
+        // Remove o aluno selecionado após confirmação
         Action removerEstudanteAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -247,10 +266,12 @@ public class BibliotecaUI extends JFrame {
         topo.add(dicaField);
         
 
+        // Localiza o aluno antes de liberar o botão de empréstimo
         JButton btnPesquisar = new JButton("Pesquisar aluno");
         btnPesquisar.addActionListener(e -> pesquisarAlunoEmprestimo());
         topo.add(btnPesquisar);
 
+        // Volta para a visão geral de empréstimos de todos os alunos
         JButton btnVerTodos = new JButton("Ver todos");
         btnVerTodos.addActionListener(e -> {
             alunoSelecionado = null;
@@ -278,6 +299,7 @@ public class BibliotecaUI extends JFrame {
         JScrollPane scroll = new JScrollPane(emprestimosTable);
         painel.add(scroll, BorderLayout.CENTER);
 
+        // Ação que conclui a devolução do livro selecionado
         Action devolverLivroAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -310,6 +332,7 @@ public class BibliotecaUI extends JFrame {
         livrosModel.setRowCount(0);
 
         for (Livro livro : biblioteca.getLivros()) {
+            // Exibe apenas os livros que correspondem ao filtro digitado
             if (termo.isEmpty() || correspondeAoLivro(livro, termo)) {
                 String status = livro.isEmprestado()
                         ? "Emprestado (RA " + livro.getRaEstudante() + ")"
@@ -342,6 +365,7 @@ public class BibliotecaUI extends JFrame {
         estudantesModel.setRowCount(0);
 
         for (Estudante estudante : biblioteca.getEstudantes()) {
+            // Mostra somente os estudantes que batem com a busca
             if (termo.isEmpty() || correspondeAoEstudante(estudante, termo)) {
                 StringJoiner joiner = new StringJoiner(", ");
                 for (String codigo : estudante.getLivrosEmprestados()) {
@@ -349,6 +373,7 @@ public class BibliotecaUI extends JFrame {
                         joiner.add(codigo);
                     }
                 }
+                // Lista simples com os códigos dos livros emprestados
                 String livros = joiner.length() > 0 ? joiner.toString() : "Nenhum";
                 estudantesModel.addRow(new Object[]{
                         estudante.getCurso(),
@@ -380,6 +405,7 @@ public class BibliotecaUI extends JFrame {
 
     private void atualizarTabelaEmprestimos(Estudante filtro) {
         emprestimosModel.setRowCount(0);
+        // Quando há aluno selecionado, busca apenas seus empréstimos
         Livro[] base = filtro == null
                 ? biblioteca.obterLivrosEmprestados()
                 : biblioteca.obterLivrosEmprestadosPorEstudante(filtro.getRa());
@@ -399,6 +425,7 @@ public class BibliotecaUI extends JFrame {
     }
 
     private void abrirDialogLivro(Livro livroExistente) {
+        // Flag indica se é edição ou novo cadastro
         boolean edicao = livroExistente != null;
         String codigo = edicao ? livroExistente.getCodigo() : "";
         String titulo = edicao ? livroExistente.getTitulo() : "";
@@ -406,6 +433,7 @@ public class BibliotecaUI extends JFrame {
         String anoTexto = edicao ? String.valueOf(livroExistente.getAno()) : "";
         String editora = edicao ? livroExistente.getEditora() : "";
 
+        // Mantém o diálogo aberto até que os dados estejam válidos ou o usuário cancele
         while (true) {
             JTextField codigoField = new JTextField(codigo);
             JTextField tituloField = new JTextField(titulo);
@@ -440,6 +468,7 @@ public class BibliotecaUI extends JFrame {
             anoTexto = anoField.getText().trim();
             editora = editoraField.getText().trim();
 
+            // Campos vazios impedem o cadastro
             if (codigo.isEmpty() || titulo.isEmpty() || autor.isEmpty() || anoTexto.isEmpty() || editora.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Preencha todos os campos.", getTitle(), JOptionPane.WARNING_MESSAGE);
                 continue;
@@ -482,12 +511,14 @@ public class BibliotecaUI extends JFrame {
     }
 
     private void abrirDialogEstudante(Estudante estudanteExistente) {
+        // Define se o formulário é de cadastro ou edição
         boolean edicao = estudanteExistente != null;
         String curso = edicao ? estudanteExistente.getCurso() : "";
         String periodoTexto = edicao ? String.valueOf(estudanteExistente.getPeriodo()) : "";
         String nome = edicao ? estudanteExistente.getNome() : "";
         String ra = edicao ? estudanteExistente.getRa() : "";
 
+        // Permite ajustar os dados até que estejam corretos
         while (true) {
             JTextField cursoField = new JTextField(curso);
             JTextField periodoField = new JTextField(periodoTexto);
@@ -520,6 +551,7 @@ public class BibliotecaUI extends JFrame {
             nome = nomeField.getText().trim();
             ra = raField.getText().trim();
 
+            // Nenhum campo pode ficar vazio
             if (curso.isEmpty() || periodoTexto.isEmpty() || nome.isEmpty() || ra.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Preencha todos os campos.", getTitle(), JOptionPane.WARNING_MESSAGE);
                 continue;
@@ -623,6 +655,7 @@ public class BibliotecaUI extends JFrame {
         String termoLower = termo.toLowerCase();
         List<Estudante> encontrados = new ArrayList<>();
         for (Estudante estudante : biblioteca.getEstudantes()) {
+            // Busca pelo RA exato ou por parte do nome
             if (estudante.getRa().equalsIgnoreCase(termo)
                     || estudante.getNome().toLowerCase().contains(termoLower)) {
                 encontrados.add(estudante);
@@ -672,6 +705,7 @@ public class BibliotecaUI extends JFrame {
             return;
         }
 
+        // Lista apenas livros que não estão emprestados
         Livro[] disponiveis = biblioteca.obterLivrosDisponiveis();
         if (disponiveis.length == 0) {
             JOptionPane.showMessageDialog(this, "Nenhum livro disponível para empréstimo.", getTitle(), JOptionPane.INFORMATION_MESSAGE);
@@ -761,6 +795,7 @@ public class BibliotecaUI extends JFrame {
     }
 
     private JPanel criarFormulario(String[] rotulos, JComponent[] campos) {
+        // Monta um formulário alinhado com rótulos e campos lado a lado
         JPanel painel = new JPanel(new GridBagLayout());
         painel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         for (int i = 0; i < rotulos.length; i++) {
@@ -783,12 +818,14 @@ public class BibliotecaUI extends JFrame {
     }
 
     private void configurarColunasDeAcao(JTable tabela, String coluna, Action acao) {
+        // Substitui o conteúdo da coluna por botões que executam a ação informada
         tabela.getColumn(coluna).setCellRenderer(new ButtonRenderer());
         tabela.getColumn(coluna).setCellEditor(new ButtonEditor(tabela, acao));
         tabela.getColumn(coluna).setPreferredWidth(90);
     }
 
     private void atualizarTodasAsListagens() {
+        // Reaplica filtros atuais em todas as tabelas e atualiza o resumo inferior
         atualizarTabelaLivros(buscarLivrosField.getText());
         atualizarTabelaEstudantes(buscarEstudantesField.getText());
         atualizarTabelaEmprestimos(alunoSelecionado);
@@ -842,6 +879,7 @@ public class BibliotecaUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             fireEditingStopped();
+            // Encaminha a linha clicada para a ação configurada
             ActionEvent evento = new ActionEvent(table, ActionEvent.ACTION_PERFORMED, String.valueOf(currentRow));
             action.actionPerformed(evento);
         }
