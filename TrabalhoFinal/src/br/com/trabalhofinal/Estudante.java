@@ -143,9 +143,9 @@ public class Estudante {
         return e;
     }
 
-    @Override
+    @Override // significa que você está reescrevendo um método herdado para mudar o comportamento padrão dele.
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(); //sb é uma variável do tipo StringBuilder que é usada para construir uma string de forma eficiente.
         sb.append(curso).append(";").append(periodo).append(";")
           .append(nome).append(";").append(ra).append(";");
         sb.append("Livros: ");

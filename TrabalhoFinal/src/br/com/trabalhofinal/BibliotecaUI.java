@@ -1,9 +1,5 @@
 package br.com.trabalhofinal;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
@@ -12,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 
 /**
  * Interface principal da aplicação. Organiza listagens, buscas e ações
@@ -468,6 +468,12 @@ public class BibliotecaUI extends JFrame {
             anoTexto = anoField.getText().trim();
             editora = editoraField.getText().trim();
 
+            // Verifica se algum campo contém ";"
+            if (codigo.contains(";") || titulo.contains(";") || autor.contains(";") || anoTexto.contains(";") || editora.contains(";")) {
+                JOptionPane.showMessageDialog(this, "Os campos não podem conter ';'. Insira dados válidos.", getTitle(), JOptionPane.WARNING_MESSAGE);
+                continue;
+            }
+
             // Campos vazios impedem o cadastro
             if (codigo.isEmpty() || titulo.isEmpty() || autor.isEmpty() || anoTexto.isEmpty() || editora.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Preencha todos os campos.", getTitle(), JOptionPane.WARNING_MESSAGE);
@@ -550,6 +556,12 @@ public class BibliotecaUI extends JFrame {
             periodoTexto = periodoField.getText().trim();
             nome = nomeField.getText().trim();
             ra = raField.getText().trim();
+
+            // Verifica se algum campo contém ";"
+            if (curso.contains(";") || periodoTexto.contains(";") || nome.contains(";") || ra.contains(";")) {
+                JOptionPane.showMessageDialog(this, "Os campos não podem conter ';'. Insira dados válidos.", getTitle(), JOptionPane.WARNING_MESSAGE);
+                continue;
+            }
 
             // Nenhum campo pode ficar vazio
             if (curso.isEmpty() || periodoTexto.isEmpty() || nome.isEmpty() || ra.isEmpty()) {

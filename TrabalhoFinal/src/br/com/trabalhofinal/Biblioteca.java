@@ -156,7 +156,9 @@ public class Biblioteca {
     }
 
     /**
-     * Disponibiliza os livros em formato de vetor para a interface.
+     * Cria e devolve um novo vetor só com os livros já cadastrados.
+     * Assim, a interface recebe apenas os livros válidos,
+     * sem ver os espaços vazios do array interno.
      */
     public Livro[] getLivros() {
         Livro[] resultado = new Livro[qtdLivros];
